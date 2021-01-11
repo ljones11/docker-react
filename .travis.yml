@@ -1,0 +1,22 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install: 
+  - docker build -t reactdocker -f Dockerfile.dev .
+
+script: 
+  - docker run -e CI=true reactdocker npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "react-docker-demo"
+  env: "ReactDockerDemo-env"
+  bucket_name: "elasticbeanstalk-us-east-1-163854895360"
+  bucket_path: "react-docker-demo"
+  on: 
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
